@@ -40,7 +40,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
     res.cookie("token", token, {
       path: "/",
       httpOnly: true,
-      expires: new Date(Date.now() + 1000 + 86400),
+      expires: new Date(Date.now() + 1000 * 86400),
     });
     res.send({ _id, name, photo, password });
   }
@@ -70,13 +70,25 @@ const loginUser = asyncHandler(async (req, res) => {
   res.cookie("token", token, {
     path: "/",
     httpOnly: true,
-    expires: new Date(Date.now() + 1000 + 86400),
+    expires: new Date(Date.now() + 1000 * 86400),
   });
-  res.send({ name, password });
+  res.send({ name, password, token });
+});
+
+// Get user data
+const getUser = asyncHandler(async (req, res) => {
+  const { userObj } = req;
+  if (userObj) {
+    res.send(req.userObj);
+  } else {
+    res.status(400);
+    throw new Error("User Not Found");
+  }
 });
 
 module.exports = {
   registerUser,
   getAllUsers,
   loginUser,
+  getUser,
 };

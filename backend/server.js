@@ -4,10 +4,11 @@ const dotenv = require("dotenv").config();
 const userRouter = require("./routes/userRouters");
 const errorHandler = require("./middleware/errorHandler");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 app.use(express.json());
-app.use(bodyParser.json());
+app.use(cookieParser());
 
 const PORT = process.env.PORT || 5000;
 
