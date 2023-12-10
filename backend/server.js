@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const userRouter = require("./routes/userRouters");
+const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/user", userRouter);
+
+app.use(errorHandler);
 
 mongoose
   .connect(process.env.MONGO_URI)
