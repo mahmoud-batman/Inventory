@@ -12,6 +12,11 @@ const validateNamePassword = (req, res) => {
     throw new Error("Please fill in all required fields");
   }
 
+  if (name.toString().length < 6) {
+    res.status(400);
+    throw new Error("Name must be up to 6 characters");
+  }
+  
   if (password.toString().length < 6) {
     res.status(400);
     throw new Error("Password must be up to 6 characters");

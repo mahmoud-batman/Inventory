@@ -5,13 +5,17 @@ const bcrypt = require("bcryptjs");
 
 const { generateToken, validateNamePassword } = require("../utils/user");
 
-// all users
+/**
+ * @function getAllUsers
+ */
 const getAllUsers = async (req, res) => {
   const users = await User.find({});
   res.send(users);
 };
 
-// register user
+/**
+ * @function registerUser
+ */
 const registerUser = asyncHandler(async (req, res, next) => {
   const { name, password } = req.body;
 
@@ -46,7 +50,9 @@ const registerUser = asyncHandler(async (req, res, next) => {
   }
 });
 
-// login user
+/**
+ * @function loginUser
+ */
 const loginUser = asyncHandler(async (req, res) => {
   const { name, password } = req.body;
 
@@ -72,10 +78,12 @@ const loginUser = asyncHandler(async (req, res) => {
     httpOnly: true,
     expires: new Date(Date.now() + 1000 * 86400),
   });
-  res.send({ name, password, token });
+  res.send({ name, token });
 });
 
-// Get user data
+/**
+ * @function getUser
+ */
 const getUser = asyncHandler(async (req, res) => {
   const { userObj } = req;
   if (userObj) {
@@ -86,7 +94,9 @@ const getUser = asyncHandler(async (req, res) => {
   }
 });
 
-// logged in status
+/**
+ * @function loggedInStatus
+ */
 const loggedInStatus = asyncHandler(async (req, res) => {
   try {
     const token = req.cookies.token;
@@ -105,7 +115,9 @@ const loggedInStatus = asyncHandler(async (req, res) => {
   }
 });
 
-// logout
+/**
+ * @function logout
+ */
 const logout = asyncHandler(async (req, res) => {
   res.cookie("token", "", {
     path: "/",
@@ -115,6 +127,59 @@ const logout = asyncHandler(async (req, res) => {
   return res.status(200).json({ message: "Successfully Logged Out" });
 });
 
+/**
+ * @function updateUser
+ */
+const updateUser = asyncHandler(async (req, res) => {
+  const { _id } = req.userObj;
+  const { name } = req.body;
+
+  if (!name) {
+    res.status(400);
+    throw new Error("Name can not be empty");
+  }
+  if (name.length < 6) {
+    res.status(400);
+    throw new Error("Name must be up to 6 characters");
+  }
+  const updatedUser = await User.findOneAndUpdate(
+    { _id },
+    { name },
+    {
+      new: true, // to return the updated value
+    }
+  );
+  res.send({ updatedUser });
+});
+
+/**
+ * @function updatePassword
+ */
+const updatePassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const { _id } = req.userObj;
+  // validate password
+  if (!oldPassword || !newPassword) {
+    res.status(400);
+    throw new Error("add old and new password");
+  }
+  if (newPassword.length < 6) {
+    res.status(400);
+    throw new Error("new Password must be up to 6 characters");
+  }
+  // check password
+  const user = await User.findById({ _id });
+  const passwordVerified = await bcrypt.compare(oldPassword, user.password);
+  if (passwordVerified) {
+    user.password = newPassword || user.password;
+    await user.save();
+    res.status(200).send("Password change successful");
+  } else {
+    res.status(400);
+    throw new Error("Old password is incorrect");
+  }
+});
+
 module.exports = {
   registerUser,
   getAllUsers,
@@ -122,4 +187,6 @@ module.exports = {
   getUser,
   loggedInStatus,
   logout,
+  updateUser,
+  updatePassword,
 };
