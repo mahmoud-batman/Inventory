@@ -88,17 +88,31 @@ const getUser = asyncHandler(async (req, res) => {
 
 // logged in status
 const loggedInStatus = asyncHandler(async (req, res) => {
-  const token = req.cookies.token;
-  if (!token) {
-    res.send(false);
-  }
-  // Verify Token
-  const verified = jwt.verify(token, process.env.JWT_SECRET);
-  if (verified) {
-    return res.json(true);
-  } else {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.send(false);
+    }
+    // Verify Token
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    if (verified) {
+      return res.json(true);
+    } else {
+      return res.json(false);
+    }
+  } catch (error) {
     return res.json(false);
   }
+});
+
+// logout
+const logout = asyncHandler(async (req, res) => {
+  res.cookie("token", "", {
+    path: "/",
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  });
+  return res.status(200).json({ message: "Successfully Logged Out" });
 });
 
 module.exports = {
@@ -107,4 +121,5 @@ module.exports = {
   loginUser,
   getUser,
   loggedInStatus,
+  logout,
 };
