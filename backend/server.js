@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
-const userRouter = require("./routes/userRouters");
+const userRouter = require("./routes/userRouter");
+const productRouter = require("./routes/productRouter");
 const errorHandler = require("./middleware/errorHandler");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -18,6 +19,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", userRouter);
+app.use("/api/product", productRouter);
 
 app.use(errorHandler);
 
