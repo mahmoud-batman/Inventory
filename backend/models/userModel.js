@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, "Please add name"],
       unique: true,
+      trim: true,
     },
     password: {
       type: String,

@@ -3,9 +3,11 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const userRouter = require("./routes/userRouters");
 const errorHandler = require("./middleware/errorHandler");
+const bodyParser = require("body-parser");
 
 const app = express();
 app.use(express.json());
+app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 5000;
 
@@ -13,7 +15,7 @@ app.get("/", (req, res) => {
   res.send("Home page");
 });
 
-app.use("/api/user", userRouter);
+app.use("/api/users", userRouter);
 
 app.use(errorHandler);
 
