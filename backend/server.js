@@ -15,6 +15,17 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://192.168.43.2:3000",
+      "http://192.168.43.202:3000",
+      "https://pinvent-app.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 
 const PORT = process.env.PORT || 5000;
 

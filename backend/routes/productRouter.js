@@ -7,11 +7,13 @@ const {
   addNewProducts,
   updateProduct,
   getProduct,
+  deleteProduct,
 } = require("../controllers/productController");
 
 router.get("/", getAllProducts);
 router.post("/", protect, addNewProducts);
 router.patch("/:id", protect, updateProduct);
 router.get("/:id", protect, getProduct);
+router.delete("/:id", protect, deleteProduct);
 
 module.exports = router;

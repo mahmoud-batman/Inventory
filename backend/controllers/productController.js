@@ -6,7 +6,7 @@ const Product = require("../models/productModel");
  */
 const getAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({});
-  res.send("products");
+  res.send(products);
 });
 
 const getProduct = asyncHandler(async (req, res) => {
@@ -60,9 +60,22 @@ const updateProduct = asyncHandler(async (req, res) => {
   res.status(200).json(updatedProduct);
 });
 
+// Delete Product
+const deleteProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findOneAndDelete({ _id: req.params.id });
+  // if product doesnt exist
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+
+  res.status(200).json({ message: `${product.name} is deleted.` });
+});
+
 module.exports = {
   getAllProducts,
   addNewProducts,
   updateProduct,
   getProduct,
+  deleteProduct,
 };
