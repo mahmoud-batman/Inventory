@@ -9,6 +9,17 @@ const getAllProducts = asyncHandler(async (req, res) => {
   res.send("products");
 });
 
+const getProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  // if product doesnt exist
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+
+  res.status(200).json(product);
+});
+
 const addNewProducts = asyncHandler(async (req, res) => {
   const { name, sku, category, quantity, price, description } = req.body;
   //   Validation
@@ -53,4 +64,5 @@ module.exports = {
   getAllProducts,
   addNewProducts,
   updateProduct,
+  getProduct,
 };
