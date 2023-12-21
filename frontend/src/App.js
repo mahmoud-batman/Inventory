@@ -1,4 +1,3 @@
-import "./App.css";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -9,6 +8,10 @@ import Login from "./pages/auth/Login";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Register from "./pages/auth/Register";
+import Dashboard from "./pages/dashboard/Dashboard";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 function App() {
   const dispatch = useDispatch();
@@ -33,6 +36,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );

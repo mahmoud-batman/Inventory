@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../services/authService";
 import { SET_NAME, SET_LOGIN } from "../../redux/features/auth/authSlice";
+import Loader from "../../component/loader/Loader";
 
 const initialState = {
   name: "",
@@ -47,7 +48,6 @@ const Register = () => {
     setIsLoading(true);
     try {
       const data = await registerUser(userData);
-      // console.log(data);
       await dispatch(SET_LOGIN(true));
       await dispatch(SET_NAME(data.name));
       navigate("/dashboard");
@@ -59,6 +59,7 @@ const Register = () => {
 
   return (
     <div className={`container ${styles.auth}`}>
+      {isLoading && <Loader />}
       <Card>
         <div className={styles.form}>
           <div className="--flex-center">
