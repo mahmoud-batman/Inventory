@@ -7,7 +7,7 @@ const protect = expressAsyncHandler(async (req, res, next) => {
     // check if token exists
     const token = req.cookies.token;
     if (!token) {
-      res.status(500);
+      res.status(401);
       throw new Error("Please Login first");
     }
 

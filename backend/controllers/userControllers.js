@@ -48,12 +48,13 @@ const registerUser = asyncHandler(async (req, res, next) => {
       sameSite: "none",
       secure: true,
     });
-    res.send({ _id, name, photo, password });
+    res.status(201).json({ _id, name, photo, password, token });
   }
 });
 
-/**
+/*********************
  * @function loginUser
+ * *******************
  */
 const loginUser = asyncHandler(async (req, res) => {
   const { name, password } = req.body;
@@ -82,7 +83,22 @@ const loginUser = asyncHandler(async (req, res) => {
     sameSite: "none",
     secure: true,
   });
-  res.send({ name, token });
+  if (user && passwordIsCorrect) {
+    const { _id, name, email, photo, phone, bio } = user;
+    res.status(200).json({
+      _id,
+      name,
+      // email,
+      photo,
+      phone,
+      bio,
+      token,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid email or password");
+  }
+  // res.send({ name, token });
 });
 
 /**
@@ -102,8 +118,8 @@ const getUser = asyncHandler(async (req, res) => {
  * @function loggedInStatus
  */
 const loggedInStatus = asyncHandler(async (req, res) => {
+  const token = req.cookies.token;
   try {
-    const token = req.cookies.token;
     if (!token) {
       return res.send(false);
     }

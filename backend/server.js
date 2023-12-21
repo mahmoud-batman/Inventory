@@ -21,22 +21,21 @@ app.use(
       "http://localhost:3000",
       "http://192.168.43.2:3000",
       "http://192.168.43.202:3000",
-      "https://pinvent-app.vercel.app",
     ],
     credentials: true,
   })
 );
 
-const PORT = process.env.PORT || 5000;
+app.use("/api/users", userRouter);
+app.use("/api/products", productRouter);
 
 app.get("/", (req, res) => {
   res.send("Home page");
 });
 
-app.use("/api/users", userRouter);
-app.use("/api/products", productRouter);
-
 app.use(errorHandler);
+
+const PORT = process.env.PORT || 5000;
 
 mongoose
   .connect(process.env.MONGO_URI)
